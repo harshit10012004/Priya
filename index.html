@@ -1,11 +1,36 @@
-<!-- index.html -->
 <!DOCTYPE html>
-<html>
-  <head>
-    <title>Priya AAC Assets</title>
-  </head>
-  <body>
-    <h1>Priya AAC Assets Hosted Here</h1>
-    <p>Access your JSON and SVG files directly via URL.</p>
-  </body>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AAC Web App</title>
+    <script type="module">
+        const REPO_BASE = 'https://raw.githubusercontent.com/harshit10012004/Priya/main/';
+        
+        async function loadData() {
+            try {
+                const [interfaceData, csvData, packsData, cardsData] = await Promise.all([
+                    fetch(`${REPO_BASE}interface/data.json`).then(r => r.json()),
+                    fetch(`${REPO_BASE}csv/data.csv`).then(r => r.text()),
+                    fetch(`${REPO_BASE}packs/data.json`).then(r => r.json()),
+                    fetch(`${REPO_BASE}cards/data.json`).then(r => r.json())
+                ]);
+
+                // Initialize Bolt.new app with loaded data
+                window.boltApp.init({
+                    interface: interfaceData,
+                    csv: csvData,
+                    packs: packsData,
+                    cards: cardsData
+                });
+            } catch (error) {
+                console.error('Error loading data:', error);
+            }
+        }
+        
+        window.addEventListener('DOMContentLoaded', loadData);
+    </script>
+</head>
+<body>
+    <div id="bolt-app-root"></div>
+</body>
 </html>
